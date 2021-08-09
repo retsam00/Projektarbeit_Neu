@@ -26,10 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import org.tensorflow.lite.Interpreter;
 
 public class MainActivity extends AppCompatActivity {
-
 
 
     @Override
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
-
                 startActivity(intent);
             }
         });
