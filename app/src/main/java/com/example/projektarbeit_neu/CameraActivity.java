@@ -11,9 +11,13 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,16 +31,44 @@ public class CameraActivity extends Activity{
     static final int REQUEST_IMAGE_CAPTURE = 1;
     File photoFile = null;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_first);
+        setContentView(R.layout.postfile);
 
         dispatchTakePictureIntent();
         loadImage();
+        TextView tvResult = (TextView)findViewById(R.id.txtResult);
+        Button btnSend = findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnSend.setEnabled(false);
+                new Thread() {
+                    public boolean running = true;
+                    public synchronized void run() {
+                        if(running) {
+                            JSONObject inputJSON = new JSONObject();
+                            try {
+                                inputJSON.put("image", "testimage");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            NetworkManager nm = new NetworkManager("http://192.168.178.107:8000/receive/");
+                            inputJSON = nm.bitmapToJSON(createImageBitmap(photoFile));
+                            JSONObject result = nm.postFile(inputJSON);
+                            if(result != null) {
+                                tvResult.append(result.toString());
+                            }
 
+
+                        }
+                    }
+                }.start();
+                btnSend.setEnabled(true);
+            }
+        });
 
     }
 
@@ -66,20 +98,17 @@ public class CameraActivity extends Activity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            ImageView preview = (ImageView)findViewById(R.id.imageView);
-            preview.setImageBitmap(createImageBitmap(photoFile));
+            ImageView ivPreview = (ImageView)findViewById(R.id.ivPreview);
+            ivPreview.setImageBitmap(createImageBitmap(photoFile));
         }
     }
 
     private Bitmap createImageBitmap(File image)
     {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        Bitmap imageBitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
         Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
-        bitmap = Bitmap.createScaledBitmap(bitmap,1000,2000,true);
-
-
-        return imageBitmap;
+        bitmap = Bitmap.createScaledBitmap(bitmap,500,500,true);
+        return bitmap;
     }
     private File createImageFile() throws IOException {
         // Create an image file name
