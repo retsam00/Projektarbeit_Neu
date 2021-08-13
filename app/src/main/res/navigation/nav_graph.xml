@@ -12,8 +12,12 @@
         tools:layout="@layout/fragment_first">
 
         <action
-            android:id="@+id/action_FirstFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_FirstFragment_to_postFile"
+            app:destination="@id/postFile" />
     </fragment>
+    <activity
+        android:id="@+id/postFile"
+        android:name="com.example.projektarbeit_neu.PostFile"
+        android:label="PostFile" />
 
 </navigation>

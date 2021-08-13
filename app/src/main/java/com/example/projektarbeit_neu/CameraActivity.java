@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.core.content.FileProvider;
@@ -34,13 +36,15 @@ public class CameraActivity extends Activity{
 
         dispatchTakePictureIntent();
         loadImage();
+
+
     }
 
 
     //öffne Kamera App
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        ComponentName test = takePictureIntent.resolveActivity(getPackageManager());
+        //ComponentName test = takePictureIntent.resolveActivity(getPackageManager());
         if(takePictureIntent.resolveActivity(getPackageManager()) != null) {
             photoFile = null;
             try {
@@ -62,11 +66,6 @@ public class CameraActivity extends Activity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            //Bundle extras = data.getExtras();
-            //Bitmap imageBitmap = (Bitmap) extras.get("data");
-            //mImageView.setImageBitmap(imageBitmap);
-            //galleryAddPic();
-
             ImageView preview = (ImageView)findViewById(R.id.imageView);
             preview.setImageBitmap(createImageBitmap(photoFile));
         }
@@ -105,15 +104,12 @@ public class CameraActivity extends Activity{
             try {
                 Bitmap myBitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
                 ImageView myImage = (ImageView) findViewById(R.id.imageView);
-
                 myImage.setImageBitmap(myBitmap);
             }
             catch(Exception x)
             {
                 x.printStackTrace();
             }
-
-
         }
     }
 
