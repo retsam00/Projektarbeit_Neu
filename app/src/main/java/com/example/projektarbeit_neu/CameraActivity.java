@@ -99,7 +99,9 @@ public class CameraActivity extends Activity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             ImageView ivPreview = (ImageView)findViewById(R.id.ivPreview);
-            ivPreview.setImageBitmap(createImageBitmap(photoFile));
+            Bitmap bitmap = createImageBitmap(photoFile);
+            Bitmap scaledBitmap =  Bitmap.createScaledBitmap(bitmap,bitmap.getWidth()/3, bitmap.getHeight()/3,true);
+            ivPreview.setImageBitmap(scaledBitmap);
         }
     }
 
@@ -107,7 +109,8 @@ public class CameraActivity extends Activity{
     {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
-        bitmap = Bitmap.createScaledBitmap(bitmap,500,500,true);
+
+        //bitmap = Bitmap.createScaledBitmap(bitmap,bitmap.getWidth()/3, bitmap.getHeight()/3,true);
         return bitmap;
     }
     private File createImageFile() throws IOException {

@@ -49,12 +49,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         Button btnTest = findViewById(R.id.btnTest);
-        btnTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), PostFile.class);
-                startActivity(intent);
-            }
+        btnTest.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), PostFile.class);
+            startActivity(intent);
         });
 
     }
